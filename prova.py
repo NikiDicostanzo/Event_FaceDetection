@@ -1,15 +1,29 @@
 import argparse
 import os
+#tagliare i video e estrarre i frame rgb
 
 def create_frame(folder):
     dirs = os.listdir(folder)
+    #print(folder)
+    count=1
     for d in dirs:
-        w = d.split('.')[0]
-        w2 = w.split('_')[0]
-        count = w2[len(w2)-2:len(w2)]
-        path = folder + '/' + d
-        os.system("ffmpeg -i {0} -filter:v fps=fps=24 /mnt/e/frame/frames{1}_%010d.png".format(path, count))
-#ffmpeg -i {0} -filter:v fps=fps=24 /tmp/frames/frames{1}_%010d.png
+        new_path = folder + 'video' + str(count)
+        if len(d.split('.'))> 1:
+            new_name = new_path + '.' + d.split('.')[1]
+            path_cut = new_path + '/video' + str(count) + '_cut.' + d.split('.')[1]
+            print(path_cut)
+            path = folder + d
+
+            if not os.path.exists(new_path):#crea le cartelle dei frame
+               os.makedirs(new_path)
+            print('Cut video: ',d)
+            os.system("ffmpeg -i {0} -ss 00:00:15 -t 00:00:30 -async 1 -strict -2 {1}".format(path, path_cut))
+            print('rename video: ',d,'in: ','video'+d.split('.')[1])
+
+            os.rename(path, new_name)
+            print('Extract frame: ', d)
+            os.system("ffmpeg -i {0} -filter:v fps=fps=20 {1}/frames{2}_%010d.png".format(path_cut,new_path, count))
+            count += 1
 
 if __name__ == '__main__':
     parser = argparse.ArgumentParser(description="Create event frame")
