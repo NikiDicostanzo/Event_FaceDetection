@@ -1,23 +1,24 @@
 import argparse
 import os
+
 #tagliare i video e estrarre i frame rgb
 
 def create_frame(folder):
     dirs = os.listdir(folder)
     #print(folder)
     count=1
-    for d in dirs:
+    for d in sorted(dirs):
         new_path = folder + 'video' + str(count)
         if len(d.split('.'))> 1:
             new_name = new_path + '.' + d.split('.')[1]
             path_cut = new_path + '/video' + str(count) + '_cut.' + d.split('.')[1]
-            print(path_cut)
             path = folder + d
 
             if not os.path.exists(new_path):#crea le cartelle dei frame
                os.makedirs(new_path)
+
             print('Cut video: ',d)
-            os.system("ffmpeg -i {0} -ss 00:00:15 -t 00:00:30 -async 1 -strict -2 {1}".format(path, path_cut))
+            os.system("ffmpeg -i {0} -ss 00:00:00 -t 00:00:30 -async 1 -strict -2 {1}".format(path, path_cut))
             print('rename video: ',d,'in: ','video'+d.split('.')[1])
 
             os.rename(path, new_name)
