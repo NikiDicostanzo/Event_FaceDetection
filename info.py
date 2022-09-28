@@ -24,7 +24,7 @@ def black_image(folder):
             path = folder + d + '/'
             frames = os.listdir(path)
             for f in sorted(frames): #frame
-                
+
                 if 'launch' != f.split('.')[1] and 'csv' != f.split('.')[1] and 'video' not in f.split('.')[0]:
                     path_frames = path + f
                     print(path_frames)
