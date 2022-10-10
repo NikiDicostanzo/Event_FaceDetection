@@ -9,12 +9,13 @@ def create_frame(folder):
     count=1
     for d in sorted(dirs):
         new_path = folder + 'video' + str(count)
-        if len(d.split('.'))> 1:
+        path_video = folder + 'batch2/'
+        if len(d.split('.')) > 1:
             new_name = new_path + '.' + d.split('.')[1]
             path_cut = new_path + '/video' + str(count) + '_cut.' + d.split('.')[1]
-            path = folder + d
+            path = path_video + d
 
-            if not os.path.exists(new_path):#crea le cartelle dei frame
+            if not os.path.exists(new_path): #crea le cartelle dei frame
                os.makedirs(new_path)
 
             print('Cut video: ',d)
@@ -39,13 +40,23 @@ def rename(folder):
             os.rename(path, new_name)
             count += 1
 
+def scale(folder):
+    dirs = os.listdir(folder)
+    # print(folder)
+    for d in sorted(dirs):
+        name = folder + d
+        new_name = folder + 'video_scale.' + d.split('.')[1]
+        os.system("ffmpeg -i {0}.mp4 -vf scale=1280:720 -strict -2 {1}".format(name, new_name))
+        dest = '/home/ndicostanzo/data/video_scale/'
+        os.system('mv {0} {1}'.format(name, dest))
 
 if __name__ == '__main__':
     parser = argparse.ArgumentParser(description="Create event frame")
     parser.add_argument("--video", dest="video", default=None, help="Path of the video")
     args = parser.parse_args()
     #create_frame(args.video)
-    rename(args.video)
+    scale(args.video)
+    #rename(args.video)
    # main()
 #
 #
