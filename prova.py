@@ -18,7 +18,7 @@ def create_frame(folder):
                os.makedirs(new_path)
 
             print('Cut video: ',d)
-            os.system("ffmpeg -i {0} -ss 00:00:00 -t 00:00:30 -async 1 -strict -2 {1}".format(path, path_cut))
+            os.system("ffmpeg -i {0} -ss 00:00:01 -t 00:00:10 -async 1 -strict -2 {1}".format(path, path_cut))
             print('rename video: ',d,'in: ','video'+d.split('.')[1])
 
             os.rename(path, new_name)
@@ -26,11 +26,26 @@ def create_frame(folder):
             os.system("ffmpeg -i {0} -filter:v fps=fps=20 {1}/frames{2}_%010d.png".format(path_cut,new_path, count))
             count += 1
 
+
+def rename(folder):
+    dirs = os.listdir(folder)
+    # print(folder)
+    count = 1
+    for d in sorted(dirs):
+        if d != '720':
+            path = folder + d
+            new_name = folder + 'video' + str(count) + '.' + d.split('.')[1]
+            print('rename video: ', d, 'in: ', new_name)
+            os.rename(path, new_name)
+            count += 1
+
+
 if __name__ == '__main__':
     parser = argparse.ArgumentParser(description="Create event frame")
     parser.add_argument("--video", dest="video", default=None, help="Path of the video")
     args = parser.parse_args()
-    create_frame(args.video)
+    #create_frame(args.video)
+    rename(args.video)
    # main()
 #
 #

@@ -43,26 +43,27 @@ def bounding_box(path_image):
     bb = np.array(bb)
     return bb
 
-
+# folder = /home/ndicostanzo/event
 def create_csv(folder):  # path -> (??) / frame/video#/frame#.png
     dirs = os.listdir(folder)
     for d in sorted(dirs):  # video
-        path = folder + d
-        #todo
-        csv_path = folder + 'event/' + d + '/video.csv'  # devo salvarlo dentro event
-        with open(csv_path, 'w') as csvfile:
-            filewriter = csv.writer(csvfile)
-            frame = os.listdir(path)
-            for f in sorted(frame):  # frame
-                if 'png' == f.split('.')[1]:
-                    path_image = path + '/' + f
-                    print('Frame: ', path_image)
-                    bb = bounding_box(path_image)
-                    print('Finish bb: ', bb)
+        if d != 'event':
+            path = folder + d
+            #todo
+            csv_path = folder + 'event/' + d + '/video.csv'  # devo salvarlo dentro event
+            with open(csv_path, 'w') as csvfile:
+                filewriter = csv.writer(csvfile)
+                frame = os.listdir(path)
+                for f in sorted(frame):  # frame
+                    if 'png' == f.split('.')[1]:
+                        path_image = path + '/' + f
+                        print('Frame: ', path_image)
+                        bb = bounding_box(path_image)
+                        print('Finish bb: ', bb)
 
-                    path_image_save = '/event/' + d + '/' + f  # metto path macchina?
-                    lines = [path_image_save, bb]
-                    filewriter.writerow(lines)
+                        path_image_save = folder + 'event/' + d + '/' + f  # metto path macchina?
+                        lines = [path_image_save, bb]
+                        filewriter.writerow(lines)
 
 
 # creo csv con coordinate bb e path al frame (attenzione al path! quando metti nella macchina-> stesse cartelle)
