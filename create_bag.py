@@ -34,7 +34,7 @@ def create_lunch(folder):
         path_file = path + "/file.launch"
         f = open(path_file, "w")
         f.write("<launch> \n"
-                "   <node pkg='rosbag' type='play' name='rosbag' required='true' args='--rate=0.5 {0}/video.bag'/> \n"
+                "   <node pkg='rosbag' type='play' name='rosbag' required='true' args='--rate=0.1 {0}/video.bag'/> \n"
                 "   <node name='extract' pkg='image_view' type='extract_images' respawn='false' required='true' output='screen' cwd='ROS_HOME'> \n"
                 "   <remap from='image' to='/dvs_rendering'/> \n"
                 "   <param name='sec_per_frame' value='0.02'/></node> \n"
@@ -56,13 +56,13 @@ if __name__ == '__main__':
     parser = argparse.ArgumentParser(description="Create event frame")
     parser.add_argument("--video", dest="video", default=None, help="Path of the video")
     args = parser.parse_args()
-    print('Video: ',args.video)
-    print('Create csv')
-    create_csv(args.video)
-    print('Create bag')
-    create_bag(args.video)
-    print('Create file lunch')
-    create_lunch(args.video)
+    print('Video: ', args.video)
+    # print('Create csv')
+    # create_csv(args.video)
+    # print('Create bag')
+    # create_bag(args.video)
+    # print('Create file lunch')
+    # create_lunch(args.video)
     print('Extract event')
     extract_event(args.video)
    # main()
