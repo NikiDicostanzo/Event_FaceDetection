@@ -11,17 +11,22 @@ from ast import literal_eval
 
 # dimension image: 1280 x 720 -> scalare tra [0,1]
 def create_ann(folder, dest):
-    path = folder + 'csv/'   #folder +
+   # path = folder + 'csv/'   #folder +
+    path = 'csv/'  # folder +
+
     dirs = os.listdir(path)
     print('folder', dirs)
 
     for d in sorted(dirs):  # cartelle video#
         path_csv = path + d
+        print('CSV: ', d)
         with open(path_csv, 'r') as csv_file:
             data = csv.reader(csv_file)
             for row in data:
-                coord = literal_eval(row[1].replace('.', '').replace(' ', ','))
-                # print(coord, '\n')
+                # coord = literal_eval(row[1].replace('.', '').replace(' ', ','))
+
+                #print(row[1].replace('. ', ', ').replace('.', '').replace(' [', ',['))
+                coord = literal_eval(row[1].replace('. ', ', ').replace('.', '').replace(' [', ',['))
 
                 # Aonnotations file : label_idx x_center y_center width height
                 center = [((coord[0][0] + coord[1][0]) / 2) / 1280, ((coord[0][1] + coord[2][1]) / 2) / 720]
@@ -29,8 +34,8 @@ def create_ann(folder, dest):
                 h = (coord[0][1] - coord[2][1]) / 720  # (ymax - ymin)
                 # print(center, 'w: ', w, 'h: ', h, '\n')
 
-                # path frame
-                name_frame = dest + 'labels/' + row[0].split('/')[2].split('.')[0] + '.txt'
+                # path frame #dest +
+                name_frame = 'labels/' + row[0].split('/')[2].split('.')[0] + '.txt'
                 # print(name_frame)
                 # label_idx x_center y_center width height
                 write = '0' + ' ' + str(center[0]) + ' ' + str(center[1]) + ' ' + str(w) + ' ' + str(h)
