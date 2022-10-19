@@ -28,7 +28,7 @@ def create_frame(folder):
 
             # os.rename(path, new_name)
             print('Extract frame: ', d)
-            os.system("ffmpeg -i {0} -filter:v fps=fps=20 {1}/{2}_%04d.png".format(path_cut, new_path, d.split('_')[0]))
+            os.system("ffmpeg -i {0} -filter:v fps=fps=20 {1}/{2}_%14d.png".format(path_cut, new_path, d.split('_')[0]))
 
             print('Calculate bouding box: ', d)
             dirs_frame = os.listdir(new_path)
@@ -63,9 +63,32 @@ def rename(folder):
             os.rename(path, new_name)
             count += 1
 
+
+def cut_video(folder):
+    path_video = folder + '/'
+    dirs = os.listdir(path_video)
+    # print(folder)
+    new_path = folder + 'cut_video/'
+    #count = 1
+    if not os.path.exists(new_path):  # crea le cartelle dei frame
+        os.makedirs(new_path)
+
+    for d in sorted(dirs): # ciclo su video
+        if d != 'a':
+            #if len(d.split('.')) > 1:
+            # new_name = new_path + '.' + d.split('.')[1]
+            path_cut = new_path + d.split('_')[0] + '_cut.' + d.split('.')[1]
+            path = path_video + d
+
+            print('Cut video: ', d)
+            os.system("ffmpeg -i {0} -ss 00:00:01 -t 00:00:30 -async 1 -strict -2 {1}".format(path, path_cut))
+            # print('rename video: ',d,'in: ','video'+d.split('.')[1])
+    print('Remove frames:', path_video)
+    shutil.rmtree(path_video)  # elimino cartella con file rgb per problemi di spazio
+
 # Resize video
 def scale(folder):
-    video_path = folder + 'batch2/'
+    video_path = folder + 'cut/'
     dirs = os.listdir(video_path)
     print('folder', folder)
     for d in sorted(dirs):
@@ -73,14 +96,17 @@ def scale(folder):
         print(name, 'd: ', d)
         new_name = folder + 'video_scale/' + d.split('.')[0] + '_scale.' + d.split('.')[1]
         print('new' , new_name)
+        new_folder = folder + 'video_scale/'
+        if not os.path.exists(new_folder):  # crea le cartelle dei frame
+            os.makedirs(new_folder)
         os.system("ffmpeg -i {0} -vf scale=1280:720 -strict -2 {1}".format(name, new_name))
 
         #dest = '/home/ndicostanzo/data/video_scale/'
         #os.system('mv {0} {1}'.format(name, dest))
 
-
-# Resize event frame
-def scale_frame(folder):
+#r
+# # Resize event frame    name: video70_0598
+def scale_frame(folder , dest):
     dirs = folder + 'event/'
     dirs_event = os.listdir(dirs)
     print('folder', dirs_event)
@@ -90,31 +116,38 @@ def scale_frame(folder):
         print(path, 'd: ', d)
         path_frame = os.listdir(path)
         print('folder', path)
-        for f in sorted(path_frame):  # cartelle frame#
-            #la cartella event_scale la voglio fuori da event
-            new_folder = folder + 'event_scale/' + d + '/'
-            if not os.path.exists(new_folder):  # crea le cartelle dei frame
-                os.makedirs(new_folder)
+        if d!= '720':
+            for f in sorted(path_frame):  # cartelle frame#
+                #la cartella event_scale la voglio fuori da event
+                # new_folder = dest + d
+                # if not os.path.exists(new_folder):  # crea le cartelle dei frame
+                #     os.makedirs(new_folder)
+                print('Frame: ', f)
+                n = f.split('.')[0]
+                num = str(int(n[len(n) - 4:len(n)]) + 2)  # il # parte da 0002 ( 1° frame rgb non c'è)
+                new_name = dest + d + '_' + n[len(n)-4:len(n)-len(num)] + num + '.' + f.split('.')[1]
+                print('new: ', new_name)
 
-            new_name = new_folder + f.split('.')[0] + '_scale.' + f.split('.')[1]
-            print('new: ', new_name)
-
-            frame = path + '/' + f
-            img = cv2.imread(frame)
-            print('Frame: ', frame)
-            img = cv2.resize(img, (1280, 720), interpolation=cv2.INTER_NEAREST)
-            cv2.imwrite(new_name, img)
-            # dest = '/home/ndicostanzo/data/video_scale/'
-            # os.system('mv {0} {1}'.format(name, dest))
+                frame = path + '/' + f
+                img = cv2.imread(frame)
+                print('Frame: ', frame)
+                img = cv2.resize(img, (1280, 720), interpolation=cv2.INTER_NEAREST)
+                cv2.imwrite(new_name, img)
+                # dest = '/home/ndicostanzo/data/video_scale/'
+                # os.system('mv {0} {1}'.format(name, dest))
 
 
 
 if __name__ == '__main__':
-    parser = argparse.ArgumentParser(description="Create event frame")
-    parser.add_argument("--video", dest="video", default=None, help="Path of the video")
-    args = parser.parse_args()
+    print('gggggg')
+    # parser = argparse.ArgumentParser(description="Create event frame")
+    # parser.add_argument("--video", dest="video", default=None, help="Path of the video")
+    # #parser.add_argument("--dest", dest="dest", default=None, help="Path of the video")
+    # args = parser.parse_args()
     #create_frame(args.video)
-    scale_frame(args.video)
+    #scale_frame(args.video,args.dest)
+    #scale(args.video)
+    #cut_video(args.video)
     # rename(args.video)
 # main()
 #
