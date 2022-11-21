@@ -11,27 +11,28 @@ import os
 
 def create_txt(fol_event, fol_yolo):
     train, test, val = split(fol_event)
-    dirs = os.listdir(fol_yolo) #/YOLO../.. /images/..
-    for d in sorted(dirs):  # cartelle dei video
-        path = fol_yolo + d # path_image
-        #dirs_im = os.listdir(path)
-        if d.split('_') in train: # h
-            print('image: ', d)
 
-        #if
+    im = fol_yolo + 'images/'
+    dirs = os.listdir(im)  #/YOLO../.. /images/..
+    name = fol_yolo + 'valid.txt'
+    with open(name, 'w') as f:
+        for d in sorted(dirs):  # cartelle dei video
+            path = 'data/custom/images/' + d  # path_image
+            if d.split('_')[0] in val:  # h
+                print('Scrive,', d)
+                f.writelines(path)
+                f.write('\n')
+
 
 #val: 10%, train: 60%, test : 30%
 def split(folder):
-    path_video = folder #+ 'images/'
-    dirs = os.listdir(path_video)
+    path_images = folder #+ 'images/'
+    dirs = os.listdir(path_images)
+    num = len(dirs)
+    len_train = round((60 * num) / 100)
+    len_val = round((10 * num) / 100)
+    len_test = num - (len_val + len_train)
 
-    len_train = round((60 * 30129) / 100)
-    len_val = round((10 * 30129) / 100)
-    len_test = 30129 - (len_val + len_train)
-
-    #train = dirs[:len_train]
-    #val = dirs[len_train: len_train + len_val]
-    #test = dirs[len_train + len_val :]
     # print(folder)
     # count = 1
     sum = 0
@@ -40,27 +41,47 @@ def split(folder):
     train = []
     val = []
     test = []
+    fold_video = []
+    count_a = []
+    count = 0
     for d in sorted(dirs):  # ciclo su frame -> YOLO... /images
-        path = folder + d
-
-        dirs1 = os.listdir(path)
-        #print(d, 'len:', len(dirs1))
-        sum = sum + len(dirs1)
-
-        if sum <= len_train  :
-            #print('Train', d, 'len:', len(dirs1), sum)
-            train.append(d)
-        elif len_train < sum < len_train + len_val:
-            sum_val = sum_val + len(dirs1)
-            val.append(d)
-            #print('Val', d, 'len:', len(dirs1), sum_val)
+        if d.split('_')[0] not in fold_video: # salvo il nome dei video che ho
+            if count > 0:
+                count_a.append(count)
+            fold_video.append(d.split('_')[0])
+            count = 0
         else:
-            test.append(d)
+            count += 1
+    count_a.append(count) # ultimo altrimenti non si salva
+    index_train = 0
+    index_val = 0
+    sum = 0
+    for d in count_a:
+        if index_train + d <= len_train :
+            index_train = index_train + d
+            index_val = index_train
+        elif len_train < index_val + d <= len_val + len_train:
+            index_val = index_val + d
 
-    print(sum, '\n')
-    print('test: ', test)
-    print('train: ', train)
-    print('val: ', val)
+
+    dirs = sorted(dirs)
+    train = dirs[:index_train]
+    val = dirs[index_train + 1: index_val]
+    test = dirs[index_val + 1:]
+
+    #
+    # for v in range(len(dirs)):
+    #     imm = dirs[v]
+    #     if v <= index_train:
+    #         train.append(imm)
+    #     elif index_train < v <= index_val:
+    #         val.append(imm)
+    #     else:
+    #         test.append(imm)
+    # print(sum, '\n')
+    print('test: ', len(test))
+    print('train: ', len(train))
+    print('val: ', len(val))
     return train, test, val
 if __name__ == '__main__':
     parser = argparse.ArgumentParser(description="Create event frame")
@@ -69,6 +90,6 @@ if __name__ == '__main__':
 
     args = parser.parse_args()
     print('Video: ', args.video)
-    create_txt(args.video, args.dest)
+    split(args.video)#, args.dest)
 
 #capire quanti sono i video da - di 600 frame
