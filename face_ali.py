@@ -15,7 +15,7 @@ def get_coord(path_image):
     face_detector_kwargs = {
         "filter_threshold": 0.8
     }
-    # Run the 3D face alignment on a test image, without CUDA. #, device='cpu',
+    # Add device='cpu' for run the 3D face alignment on a test image without CUDA.
     fa = face_alignment.FaceAlignment(face_alignment.LandmarksType._3D, flip_input=True,
                                       face_detector=face_detector, face_detector_kwargs=face_detector_kwargs)
     input_img = io.imread(path_image)
@@ -25,9 +25,9 @@ def get_coord(path_image):
     return preds
 
 
-def plot_bb(path_image, path_event):
+def plot_bb(path_image, path_event, bb):
     event_img = io.imread(path_event)
-    bb = bounding_box(path_image)
+    #bb = bounding_box(path_image)
     fig = plt.figure(figsize=plt.figaspect(.5))
     ax = fig.add_subplot(1, 2, 1)
     ax.imshow(event_img)
@@ -38,9 +38,9 @@ def plot_bb(path_image, path_event):
 
 def bounding_box(path_image):
     preds = get_coord(path_image)
-    print('QUI:', preds)
-    if preds is None:
-        bb = -1
+    #print('QUI:', preds)
+    if preds is None: # Non trova viso
+        bb = []
     else:
         bb = [[max(preds[:, 0]), max(preds[:, 1])],
               [min(preds[:, 0]), max(preds[:, 1])],
@@ -52,24 +52,24 @@ def bounding_box(path_image):
 # folder = /home/ndicostanzo/event
 def create_csv(folder):  # path -> (??) / frame/video#/frame#.png
     dirs = os.listdir(folder)
+    print('Save boundig box in csv file')
     for d in sorted(dirs):  # video
-        if d != 'event':
-            path = folder + d
-            #todo
-            csv_path = folder + 'event/' + d + '/video.csv'  # devo salvarlo dentro event
-            with open(csv_path, 'w') as csvfile:
-                filewriter = csv.writer(csvfile)
-                frame = os.listdir(path)
-                for f in sorted(frame):  # frame
-                    if 'png' == f.split('.')[1]:
-                        path_image = path + '/' + f
-                        print('Frame: ', path_image)
-                        bb = bounding_box(path_image)
-                        print('Finish bb: ', bb)
 
-                        path_image_save = folder + 'event/' + d + '/' + f  # metto path macchina?
-                        lines = [path_image_save, bb]
-                        filewriter.writerow(lines)
+        path = folder + d
+        csv_path = folder + 'event/' + d + '/video.csv'  # devo salvarlo dentro event
+        with open(csv_path, 'w') as csvfile:
+            filewriter = csv.writer(csvfile)
+            frame = os.listdir(path)
+            for f in sorted(frame):  # frame
+                if 'png' == f.split('.')[1]:
+                    path_image = path + '/' + f
+                    print('Frame: ', path_image)
+                    bb = bounding_box(path_image)
+                    print('Finish bb: ', bb)
+
+                    path_image_save = folder + 'event/' + d + '/' + f  # metto path macchina?
+                    lines = [path_image_save, bb]
+                    filewriter.writerow(lines)
 
 
 # creo csv con coordinate bb e path al frame (attenzione al path! quando metti nella macchina-> stesse cartelle)
