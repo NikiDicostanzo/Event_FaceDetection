@@ -1,6 +1,6 @@
 import argparse
 import os
-
+from preprocessing import rename_event
 #simulatore esim
 #path_ros = '/home/ninad/sim_ws/src/rpg_esim/event_camera_simulator/esim_ros'
 
@@ -48,9 +48,13 @@ def extract_event(folder):
         os.system("roslaunch {0}/file.launch".format(path))
         print('p :', path)
         new_path = folder + 'event/' + d
+        tmp_path = folder + 'tmp_event/' + d
         if not os.path.exists(new_path):  # crea le cartelle dei frame
             os.makedirs(new_path)
-        os.system('mv ~/.ros/frame*.jpg {0}'.format(new_path))
+        if not os.path.exists(tmp_path):  # crea le cartelle dei frame
+            os.makedirs(tmp_path)
+        os.system('mv ~/.ros/frame*.jpg {0}'.format(tmp_path))
+    rename_event(args.video)  # rinomino i frame0002 in poi
 
 
 if __name__ == '__main__':
@@ -67,5 +71,3 @@ if __name__ == '__main__':
     create_lunch(args.video)
     print('Extract event')
     extract_event(args.video)
-
-
