@@ -8,7 +8,7 @@ def create_frame(folder, size):
     dirs = os.listdir(path_video)
     for d in sorted(dirs):  # ciclo su video
 
-        new_path = folder + 'frame/' + d.split('_')[0] + '/'
+        new_path = folder + 'video_cut/' + d.split('_')[0] + '/'
         if not os.path.exists(new_path):  # crea le cartelle dei frame
             os.makedirs(new_path)
 
