@@ -6,16 +6,18 @@ from preprocessing import rename_event
 
 
 def create_csv(folder, path_ros):
-    dirs = os.listdir(folder)
-    for d in sorted(dirs): #cartelle dei video
-        path = folder + d + '/'
+    fol = folder + 'image/'
+    dirs = os.listdir(fol)
+    for d in sorted(dirs):
+        path = fol + d + '/'
         os.system("python {0}/scripts/generate_stamps_file.py -i {1} -r 20.0".format(path_ros, path))
 
 
 def create_bag(folder):
-    dirs = os.listdir(folder)
-    for d in sorted(dirs): #cartelle dei video
-        path = folder + d #cartella ai frame
+    fol = folder + 'image/'
+    dirs = os.listdir(fol)
+    for d in sorted(dirs): #cartelle con cartelle dei frame
+        path = fol + d #cartella ai frame
         print(path)
         os.system("rosrun esim_ros esim_node --data_source=2 "
                   "--path_to_output_bag={0}/video.bag "
@@ -26,9 +28,10 @@ def create_bag(folder):
 
 
 def create_lunch(folder):
-    dirs = os.listdir(folder)
+    fol = folder + 'image/'
+    dirs = os.listdir(fol)
     for d in sorted(dirs):  # cartelle dei video
-        path = folder + d
+        path = fol + d
         print(path)
         path_file = path + "/file.launch"
         f = open(path_file, "w")
@@ -42,19 +45,18 @@ def create_lunch(folder):
 
 
 def extract_event(folder):
-    dirs = os.listdir(folder)
-    for d in sorted(dirs):  # cartelle dei video
-        path = folder + d
+    fol = folder + 'image/'
+    dirs = os.listdir(fol)
+    path_event = folder + 'event/'
+    for d in sorted(dirs):  # cartelle di carelle
+        path = fol + d
         os.system("roslaunch {0}/file.launch".format(path))
         print('p :', path)
-        new_path = folder + 'event/' + d
-        tmp_path = folder + 'tmp_event/' + d
+        new_path = path_event + d
         if not os.path.exists(new_path):  # crea le cartelle dei frame
             os.makedirs(new_path)
-        if not os.path.exists(tmp_path):  # crea le cartelle dei frame
-            os.makedirs(tmp_path)
-        os.system('mv ~/.ros/frame*.jpg {0}'.format(tmp_path))
-    rename_event(args.video)  # rinomino i frame0002 in poi
+        os.system('mv ~/.ros/frame*.jpg {0}'.format(new_path))
+    rename_event(path_event)  # rinomino i frame0002 in poi
 
 
 if __name__ == '__main__':

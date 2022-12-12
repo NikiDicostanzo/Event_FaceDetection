@@ -26,9 +26,6 @@ def data_yolo(folder, dest, size_im):
         print('Extract frame RGB: ', d)
         os.system("ffmpeg -i {0} -filter:v fps=fps=20 {1}/{2}_%04d.png".format(path, new_path, d.split('_')[0]))
         dirs_frame = os.listdir(new_path)
-        # resize_path = new_path + 'resize/'
-        # if not os.path.exists(resize_path):  # crea le cartelle dei frame
-        #     os.makedirs(resize_path)
         for f in sorted(dirs_frame):
             path_image = new_path + f
             if f.split('.')[0] != 'video0001':  # non voglio il 1° frame perche non ho l'event

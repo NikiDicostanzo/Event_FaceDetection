@@ -12,7 +12,7 @@ def create_frame(folder, size):
         if not os.path.exists(new_path_video):  # crea le cartelle dei video
             os.makedirs(new_path_video)
 
-        new_path_event = folder + 'event/' + d.split('.')[0] + '/'
+        new_path_event = folder + 'image/' + d.split('.')[0] + '/' #frame RGB
         if not os.path.exists(new_path_event):  # crea le cartelle dei frame
             os.makedirs(new_path_event)
 
@@ -46,7 +46,7 @@ def rename(folder):
 
 
 def rename_event(folder):
-    path = folder + 'v/'
+    path = folder + 'event/'
     dirs_event = os.listdir(path)
     print('folder', dirs_event)
     for d in sorted(dirs_event):  # cartelle video#
