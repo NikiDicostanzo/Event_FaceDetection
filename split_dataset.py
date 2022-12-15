@@ -10,14 +10,14 @@ import os
 # /video70_0600.png
 
 
-def create_txt(fol_event, fol_yolo, split_val, split_train):
-    train, test, val = split(fol_event, split_val, split_train)
+def create_txt(fol_yolo, split_val, split_train):
+    im = fol_yolo + 'data/custom/images/'
+    train, test, val = split(im, split_val, split_train)
 
-    im = fol_yolo + 'images/'
     dirs = os.listdir(im)  #/YOLO../.. /images/..
-    name1 = fol_yolo + 'train.txt'
-    name2 = fol_yolo + 'valid.txt'
-    name3 = fol_yolo + 'test.txt'
+    name1 = fol_yolo + 'data/custom/train.txt'
+    name2 = fol_yolo + 'data/custom/valid.txt'
+    name3 = fol_yolo + 'data/custom/test.txt'
 
     write_file(name1, dirs, train)
     write_file(name2, dirs, val)
@@ -35,9 +35,8 @@ def write_file(name, dirs, data):
 
 
 #val: 10%, train: 60%, test : 30%
-def split(folder, split_val, split_train):
-    path_images = folder + 'images/'
-    dirs = os.listdir(path_images)
+def split(im, split_val, split_train):
+    dirs = os.listdir(im)
     num = len(dirs)
     print(split_train, split_val)
     len_train = round((split_train * num) / 100)
@@ -58,7 +57,6 @@ def split(folder, split_val, split_train):
         else:
             count += 1
     count_a.append(count)  # ultimo altrimenti non si salva
-    print(count_a)
     index_train = 0
     index_val = 0
     tol = num / 100
@@ -88,10 +86,9 @@ def split(folder, split_val, split_train):
 
 if __name__ == '__main__':
     parser = argparse.ArgumentParser(description="Create event frame")
-    parser.add_argument("--video", dest="video", default=None, help="Path of the video")
-    parser.add_argument("--dest", dest="dest", default=None, help="Path of the video")
-    parser.add_argument("--val", dest="split_val", default=10, help="Split dataset")
-    parser.add_argument("--train", dest="split_train", default=60, help="Split dataset")
+    parser.add_argument("--yolo", dest="yolo", default=None, help="Path of Yolo folder")
+    parser.add_argument("--val", dest="split_val", default=10, help="Split dataset (val)")
+    parser.add_argument("--train", dest="split_train", default=60, help="Split dataset (train)")
     args = parser.parse_args()
     print('Video: ', args.video)
-    create_txt(args.video, args.dest, args.split_val, args.split_train)
+    create_txt(args.yolo, args.split_val, args.split_train)

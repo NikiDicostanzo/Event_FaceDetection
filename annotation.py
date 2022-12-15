@@ -53,6 +53,21 @@ def data_yolo(folder, dest, size_im):
         filewriter = csv.writer(csvfile)
         filewriter.writerow(no_bb)
 
+def move_event(folder, yolo, size_im):
+    path_video = folder + 'event/'
+    path_yolo = yolo + 'data/custom/images/'
+    dirs = os.listdir(path_video)
+    print('Move images')
+    for d in sorted(dirs):  # ciclo su video
+        path_event = path_video + d + '/'
+        dirs_frame = os.listdir(path_event)
+        for f in sorted(dirs_frame):
+            new_path = path_yolo + f
+            old_path = path_event + f
+            print(old_path)
+            shutil.move(old_path, new_path)
+            #os.system('mv {0} {1}'.format(old_path, new_path))
+
 
 # uso video scalati ! non serve
 def scale_image(frame, new_name, size_im):
@@ -80,8 +95,10 @@ def create_ann(coord, row, dest, size_im):
 if __name__ == '__main__':
     parser = argparse.ArgumentParser(description="Create event frame")
     parser.add_argument("--video", dest="video", default=None, help="Path of the video")
-    parser.add_argument("--dest", dest="dest", default=None, help="Path to save annotation")
+    parser.add_argument("--yolo", dest="yolo", default=None, help="Path to save annotation")
     parser.add_argument("--size_im", dest="size_im", default=768, help="Size of image")
     args = parser.parse_args()
     print('Video: ', args.video)
-    data_yolo(args.video, args.dest, args.size_im)
+    move_event(args.video, args.yolo, args.size_im)
+    data_yolo(args.video, args.yolo, args.size_im)
+
