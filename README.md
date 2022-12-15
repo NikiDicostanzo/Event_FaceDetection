@@ -10,10 +10,11 @@ Dataset:
 note: non usare video con immagini nere/scritte!
 
 Dopo aver eseguito preprocessing.py e create_bag.py si ottiene: 
+```
 ../folder/
      |_ video_cut
      |_ event
-
+```
 #### 
 (Andare al path: /home/ndicostanzo/vmr/)
 \\(--video = /home/ndicostanzo/data/) 
