@@ -9,14 +9,7 @@ Dataset:
  ```
 note: non usare video con immagini nere/scritte!
 
-Dopo aver eseguito preprocessing.py e create_bag.py si ottiene: 
-```
-../folder/
-     ├── video
-     ├── video_cut
-     └── event
-```
-#### 
+## Run
 (Andare al path: /home/ndicostanzo/vmr/)
 
 (--video = /home/ndicostanzo/data/) 
@@ -29,6 +22,14 @@ Creare i file bag:
 ```
 python create_bag.py --video 'folder' --ros 'path_folder_esim'
 ```
+Dopo aver eseguito preprocessing.py e create_bag.py si ottiene: 
+```
+../folder/
+     ├── video
+     ├── video_cut
+     └── event
+```
+
 split dataset:
 ```
 python split_dataset.py --yolo 'path_folder_yolo' 
