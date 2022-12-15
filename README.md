@@ -1,5 +1,5 @@
 ### Recommended Directory Structure for preprocessing video
-Dataset:
+Dataset: (/home/ndicostanzo/data/)
 ```
 ../folder/
     └── video
