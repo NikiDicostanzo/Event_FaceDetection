@@ -17,7 +17,8 @@ Dopo aver eseguito preprocessing.py e create_bag.py si ottiene:
 ```
 #### 
 (Andare al path: /home/ndicostanzo/vmr/)
-\\(--video = /home/ndicostanzo/data/) 
+
+(--video = /home/ndicostanzo/data/) 
 
 Processare i video: 
 ```
@@ -37,6 +38,7 @@ python annotation.py --video 'folder' --yolo 'path_folder_yolo'
 ```
 #### 
 (-- path_yolo = /home/ndicostanzo/PyTorch-YOLOv3/pytorchyolo/)
+
 Eseguire train:(andare al path path_yolo)
 ```
 python train.py --d config/custom.data --pretrained_weights weights/darknet53.conv.74 -e 100 --n_cpu 1
