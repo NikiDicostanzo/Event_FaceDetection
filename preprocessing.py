@@ -21,7 +21,7 @@ def create_frame(folder, size):
 
         print('Cut and scale video: ', d)
         os.system(
-            "ffmpeg -i {0} -vf scale={2}:{2} -ss 00:00:01 -t 00:00:30 -async 1 -strict -2 {1}".format(path, path_cut,
+            "ffmpeg -i {0} -vf scale={2}:{2} -ss 00:00:01 -t 00:00:20 -async 1 -strict -2 {1}".format(path, path_cut,
                                                                                                       size))
         print('Extract frame: ', d)  # i frame li chiamo video#_##.png
         os.system("ffmpeg -i {0} -filter:v fps=fps=20 {1}/{2}_%04d.png".format(path_cut, new_path_event, d.split('.')[0]))
@@ -46,14 +46,12 @@ def rename(folder):
 
 
 def rename_event(folder):
-    path = folder + 'event/'
-    dirs_event = os.listdir(path)
+    dirs_event = os.listdir(folder)
     print('folder', dirs_event)
     for d in sorted(dirs_event):  # cartelle video#
-        path_video = path + d + '/'
-        print(path, 'd: ', d)
+        path_video = folder + d + '/'
+        print(path_video)
         path_frame = os.listdir(path_video)
-        print('folder', path)
         for f in reversed(sorted(path_frame)):  # cartelle frame, ciclo dall'ultimo
             print('Frame: ', f)
             n = f.split('.')[0]
